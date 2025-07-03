@@ -92,6 +92,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { useSnackBarStore } from "@/stores/snackBar";
+
+const snackbar = useSnackBarStore();
 
 const login_stepper_id = ref(1);
 const mobile_no = ref("");
@@ -108,13 +111,25 @@ const handleLogin = async () => {
     login_btn_loading.value = true;
     login_stepper_id.value = 2;
     login_btn_loading.value = false;
+  } else {
+    snackbar.showToast({
+      message: "Please enter valid mobile number",
+      color: "error",
+    });
   }
 };
 const verifyOtp = async () => {
   if (!otp.value || otp.value.length < 6) {
-    alert("Please enter a valid 6-digit OTP");
+    snackbar.showToast({
+      message: "Invalid OTP!",
+      color: "error",
+    });
     return;
   } else {
+    snackbar.showToast({
+      message: "OTP Verified!",
+      color: "success",
+    });
     otp_btn_loading.value = true;
     login_stepper_id.value = 1;
     otp_btn_loading.value = false;
