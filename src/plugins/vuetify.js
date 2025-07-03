@@ -8,8 +8,8 @@ const customLightTheme = {
   colors: {
     primary: '#687FE5',
     secondary: '#EBD6FB',
-    background: '#FCD8CD',
-    background_lighter: '#FEEBF6', 
+    background_dark: '#FCD8CD',
+    background_light: '#FEEBF6', 
     success: "#27AE60",
     error: "#D7443E",
     warning: "#F18324",

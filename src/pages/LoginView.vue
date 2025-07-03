@@ -4,7 +4,7 @@
       <v-col
         cols="12"
         md="6"
-        class="bg-background_lighter d-flex align-center justify-center flex-column px-15 text-center"
+        class="bg-background_light d-flex align-center justify-center flex-column px-15 text-center"
       >
         <img
           src="@/assets/images/login-image.svg"
