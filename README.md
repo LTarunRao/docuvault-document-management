@@ -1,77 +1,127 @@
-# Vuetify (Default)
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+# 📁 DocuVault – Document Management System
 
-## ❗️ Important Links
+DocuVault is a modern document management system built using **Vue 3**, **Vuetify 3**, **Pinia**, and **Vite**. It supports secure document uploads, filtering, previews (PDF/Image), tagging, and downloading—all within a sleek and mobile-friendly UI.
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+---
 
-## 💿 Install
+## 🚀 Tech Stack
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
+| Tech            | Description                             |
+|-----------------|-----------------------------------------|
+| Vue 3           | Frontend Framework                      |
+| Vite            | Lightning-fast dev server & bundler     |
+| Vuetify 3       | UI Component Library (Material Design)  |
+| Pinia           | State Management                        |
+| Axios           | HTTP Client                             |
+| Vue Router      | Client-side Routing                     |
+| JWT Decode      | Token decoding for auth/refresh flows   |
+| Moment.js       | Date/time handling                      |
 
-| Package Manager                                                | Command        |
-|---------------------------------------------------------------|----------------|
-| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
-| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
-| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
+---
 
-After completing the installation, your environment is ready for Vuetify development.
+## 📂 Project Folder Structure
 
-## ✨ Features
-
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
-
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
-
-## 💡 Usage
-
-This section covers how to start the development server and build your project for production.
-
-### Starting the Development Server
-
-To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
-
-```bash
-yarn dev
+```
+src/
+├── assets/                  # Static assets (images, fonts)
+├── components/              # Reusable UI components
+│   └── common/              # Global dialogs/snackbars etc.
+├── constants/               # Static constants (messages, etc.)
+├── layouts/                 # Layouts (AuthLayout, DefaultLayout)
+├── pages/                   # Top-level route views
+│   ├── LoginView.vue
+│   ├── DashboardView.vue
+│   └── ...
+├── plugins/                 # Vuetify, Axios setup
+├── router/                  # Vue Router setup
+├── stores/                  # Pinia stores (snackbar, auth, preview)
+├── utils/                   # Utility functions (rules, helpers)
+├── App.vue
+└── main.js
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+---
 
-> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
+## 📦 Key Packages
 
-### Building for Production
+| Package                | Usage                                        |
+|------------------------|----------------------------------------------|
+| `vue`                  | Core framework                               |
+| `vuetify`              | Material Design UI                           |
+| `pinia`                | Store management                             |
+| `vue-router`           | Routing                                      |
+| `axios`                | HTTP client with interceptors                |
+| `jwt-decode`           | Decode JWT tokens                            |
+| `moment`               | Handle date comparisons                      |
+| `@mdi/font`            | Material Design Icons                        |
+| `vite-plugin-vue-devtools` | Optional: Vue DevTools in Vite dev mode  |
 
-To build your project for production, use:
+---
+
+## ⚙️ Project Setup
+
+### 1. Clone & Install
 
 ```bash
-yarn build
+git clone https://github.com/your-username/docuvault.git
+cd docuvault
+npm install
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+### 2. Run Dev Server
 
-Once the build process is completed, your application will be ready for deployment in a production environment.
+```bash
+npm run dev
+```
 
-## 💪 Support Vuetify Development
+### 3. Build for Production
 
-This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
+```bash
+npm run build
+```
 
-- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
-- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
-- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
-- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
-- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
-- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
-- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
+---
+
+## 🧩 Features
+
+### ✅ Auth
+- Login with mobile number + password
+- JWT-based auth with automatic refresh
+- Route-based layout switching (Auth vs Default)
+
+### ✅ Dashboard
+- Smart file search: by category, tags, or date range
+- Live filtering and listing
+- File previews: PDFs and images inline
+- Download individual files or as ZIP
+- Global Snackbar for feedback
+
+### ✅ File Upload
+- Upload form with:
+  - Type → Dynamic category dropdown
+  - Tagging with chips/autocomplete
+  - File selection (PDF/Image only)
+  - Remarks and date picker
+- Opens from FAB button using component `ref`
+
+---
+
+## 📌 Global Features
+
+- `rules.js` → Centralized form validations
+- `messages.js` → Centralized app messages
+- `snackBarStore` → Global toast system via `$showToast`
+- `axios.js` → Global Axios config with interceptors, refresh token handling
+
+---
+
+## 🧠 Author
+
+**Tarun Rao**  
+[LinkedIn](https://linkedin.com/in/l-tarun-rao) · [Email](mailto:l.tarun.rao1@gmail.com)
+
+---
 
 ## 📑 License
 [MIT](http://opensource.org/licenses/MIT)
