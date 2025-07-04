@@ -82,6 +82,8 @@ axios.interceptors.response.use(
 
       return new Promise((resolve, reject) => {
         alert("Refresh token api to be called");
+        authToken.removeAccessToken();
+        router.push({ name: "Login" });
         console.log(resolve, reject);
       });
     }
