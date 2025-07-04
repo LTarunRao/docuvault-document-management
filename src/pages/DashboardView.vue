@@ -38,7 +38,7 @@
       </v-row>
       <v-row dense>
         <v-col cols="12">
-          <v-btn color="primary" @click="downloadAllAsZip()"
+          <v-btn color="primary" rounded="xl" @click="downloadAllAsZip()"
             >Download All as ZIP</v-btn
           >
         </v-col>
@@ -91,7 +91,7 @@
         </template>
 
         <template v-slot:[`item.download`]="{ item }">
-          <v-btn size="small" color="success" @click="downloadFile(item)">
+          <v-btn size="small" color="success" rounded="xl" @click="downloadFile(item)">
             Download
           </v-btn>
         </template>
@@ -101,10 +101,11 @@
   icon
   color="primary"
   class="upload-file-btn"
-  @click="openUploadFileDialog"
+  @click="uploadDialogRef.openDialog()"
 >
   <v-icon>mdi-plus</v-icon>
 </v-btn>
+ <FileUploadDialog ref="uploadDialogRef" />
   </v-container>
 </template>
 
@@ -112,6 +113,9 @@
 import { ref, computed } from "vue";
 import { useFilePreviewStore } from "@/stores/filePreview";
 import { useSnackBarStore } from "@/stores/snackBar";
+import FileUploadDialog from '@/components/FileUploadDialog.vue'
+
+const uploadDialogRef = ref()
 
 const snackbar = useSnackBarStore();
 const filePreviewStore = useFilePreviewStore();
