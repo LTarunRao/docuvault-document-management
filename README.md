@@ -65,7 +65,7 @@ src/
 
 ```bash
 git clone https://github.com/LTarunRao/docuvault-document-management.git
-cd docuvault
+cd docuvault-document-management
 npm install
 ```
 
