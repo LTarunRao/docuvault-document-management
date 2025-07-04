@@ -93,7 +93,9 @@
 <script setup>
 import { ref } from "vue";
 import { useSnackBarStore } from "@/stores/snackBar";
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const snackbar = useSnackBarStore();
 
 const login_stepper_id = ref(1);
@@ -130,6 +132,7 @@ const verifyOtp = async () => {
       message: "OTP Verified!",
       color: "success",
     });
+      router.push({ name: 'Dashboard' });
     otp_btn_loading.value = true;
     login_stepper_id.value = 1;
     otp_btn_loading.value = false;
