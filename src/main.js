@@ -31,4 +31,3 @@ app.config.globalProperties.$api = api
 registerPlugins(app)
 
 app.mount('#app')
-// 9551221
