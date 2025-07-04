@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isOpen" max-width="800">
     <v-card>
-      <v-card-title class="text-h6 d-flex align-center justify-space-between">
+      <v-card-title class="border-bottom text-h6 d-flex align-center justify-space-between">
         File Preview
         <v-btn
           density="comfortable"

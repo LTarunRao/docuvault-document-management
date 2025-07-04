@@ -12,6 +12,7 @@ declare module 'vue' {
     Auth: typeof import('./src/components/layout/Auth.vue')['default']
     Default: typeof import('./src/components/layout/Default.vue')['default']
     FilePreviewDialog: typeof import('./src/components/common/FilePreviewDialog.vue')['default']
+    FileUploadDialog: typeof import('./src/components/FileUploadDialog.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Navbar: typeof import('./src/components/layout/Navbar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
