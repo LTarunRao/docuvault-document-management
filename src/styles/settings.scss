@@ -8,3 +8,11 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+.required_field:after{
+    content: "*";
+    color: red;
+    padding-left: 3px;
+}
+.border-bottom{
+    border-bottom: 1px solid #EBD6FB ;
+}
