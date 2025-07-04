@@ -49,7 +49,7 @@
                       color="primary"
                       rounded="xl"
                       class="mt-0 px-8"
-                      @click="handleLogin()"
+                      @click="generateOtp()"
                     >
                       Login
                     </v-btn>
@@ -93,33 +93,62 @@
 <script setup>
 import { ref } from "vue";
 import { useSnackBarStore } from "@/stores/snackBar";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 const snackbar = useSnackBarStore();
 
 const login_stepper_id = ref(1);
-const mobile_no = ref("");
+const mobile_no = ref("8889666727");
 const otp = ref("");
 const login_btn_loading = ref(false);
 const otp_btn_loading = ref(false);
 
 const login_form = ref();
+const { apiCall, api } = useApiCall();
 
-const handleLogin = async () => {
+const generateOtp = async () => {
   const { valid } = await login_form.value.validate();
 
-  if (valid) {
-    login_btn_loading.value = true;
-    login_stepper_id.value = 2;
-    login_btn_loading.value = false;
-  } else {
+  if (!valid) {
     snackbar.showToast({
       message: "Please enter valid mobile number",
       color: "error",
     });
+    return;
   }
+
+  login_btn_loading.value = true;
+
+  const payload = {
+    mobile_number: mobile_no.value,
+  };
+
+  const successHandler = (res) => {
+    snackbar.showToast({
+      message: "OTP sent successfully!",
+      color: "success",
+    });
+    login_stepper_id.value = 2;
+  };
+
+  const failureHandler = () => {};
+
+  const finallyHandler = () => {
+    login_btn_loading.value = false;
+  };
+
+  apiCall("post", api.auth.generateOTP, {
+    data: payload,
+    onSuccess: successHandler,
+    onFailure: failureHandler,
+    onFinally: finallyHandler,
+    isTokenRequired: false,
+  });
 };
+
+import authToken from "@/utils/authToken";
+
 const verifyOtp = async () => {
   if (!otp.value || otp.value.length < 6) {
     snackbar.showToast({
@@ -127,16 +156,45 @@ const verifyOtp = async () => {
       color: "error",
     });
     return;
-  } else {
-    snackbar.showToast({
-      message: "OTP Verified!",
-      color: "success",
-    });
-      router.push({ name: 'Dashboard' });
-    otp_btn_loading.value = true;
-    login_stepper_id.value = 1;
-    otp_btn_loading.value = false;
   }
+
+  otp_btn_loading.value = true;
+
+  const payload = {
+    mobile_number: mobile_no.value,
+    otp: otp.value,
+  };
+
+  const successHandler = (res) => {
+    console.log("verify otp", res);
+    const response = res.data;
+    if (response.status && response.data) {
+      const { token, user_id, user_name, roles } = response.data;
+
+      authToken.setAccessToken(token, token);
+
+      localStorage.setItem("user_id", user_id);
+      localStorage.setItem("user_name", user_name);
+      localStorage.setItem("user_role", roles[0]?.role_slug || "");
+      localStorage.setItem("user_home", roles[0]?.home || "");
+
+      router.push({ name: "Dashboard" });
+    }
+  };
+
+  const failureHandler = () => {};
+
+  const finallyHandler = () => {
+    otp_btn_loading.value = false;
+  };
+
+  apiCall("post", api.auth.validateOTP, {
+    data: payload,
+    onSuccess: successHandler,
+    onFailure: failureHandler,
+    onFinally: finallyHandler,
+    isTokenRequired: false,
+  });
 };
 </script>
 <style scoped>

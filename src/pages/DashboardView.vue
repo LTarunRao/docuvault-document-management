@@ -49,7 +49,8 @@
       <v-data-table
         :headers="headers"
         :items="files_list"
-        :items-per-page="5"
+        :items-per-page="-1"
+        hide-default-footer
         class="elevation-1"
       >
         <template v-slot:[`item.tags`]="{ item }">
@@ -71,15 +72,15 @@
             class="d-inline-flex align-center cursor-pointer my-3"
           >
             <v-img
-              v-if="getFileType(item.file) === 'image'"
-              :src="item.file"
+              v-if="getFileType(item.file_url) === 'image'"
+              :src="item.file_url"
               width="100"
               height="100"
               class="rounded mr-2"
               cover
             />
             <v-icon
-              v-else-if="getFileType(item.file) === 'pdf'"
+              v-else-if="getFileType(item.file_url) === 'pdf'"
               color="red"
               size="32"
               class="mr-2"
@@ -91,42 +92,59 @@
         </template>
 
         <template v-slot:[`item.download`]="{ item }">
-          <v-btn size="small" color="success" rounded="xl" @click="downloadFile(item)">
+          <v-btn
+            size="small"
+            color="success"
+            rounded="xl"
+            @click="downloadFile(item)"
+          >
             Download
           </v-btn>
         </template>
       </v-data-table>
+      <!-- <v-pagination
+      class="mt-2"
+      color="primary"
+          v-model="filters.current_page"
+          :length="length"
+          :total-visible="7"
+        ></v-pagination> -->
     </v-card>
     <v-btn
-  icon
-  color="primary"
-  class="upload-file-btn"
-  @click="uploadDialogRef.openDialog()"
->
-  <v-icon>mdi-plus</v-icon>
-</v-btn>
- <FileUploadDialog ref="uploadDialogRef" />
+      icon
+      color="primary"
+      class="upload-file-btn"
+      @click="uploadDialogRef.openDialog()"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <FileUploadDialog ref="uploadDialogRef" />
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useFilePreviewStore } from "@/stores/filePreview";
 import { useSnackBarStore } from "@/stores/snackBar";
-import FileUploadDialog from '@/components/FileUploadDialog.vue'
+import FileUploadDialog from "@/components/FileUploadDialog.vue";
+import apiCall from "@/utils/axios";
+import { api } from "@/constants/api";
 
-const uploadDialogRef = ref()
+const uploadDialogRef = ref();
 
 const snackbar = useSnackBarStore();
 const filePreviewStore = useFilePreviewStore();
 
 const previewFile = (item) => {
-  const type = getFileType(item.file);
+  const type = getFileType(item.file_url);
   useFilePreviewStore().open({
-    url: item.file,
+    url: item.file_url,
     type,
   });
 };
+
+
+const length = ref(1);
 
 const personal_categories_list = [
   "Alex Blaze",
@@ -142,126 +160,28 @@ const filters = ref({
   type: null,
   category: null,
   tags: [],
-  fromDate: "",
-  toDate: "",
+  from_date: "",
+  to_date: "",
+  current_page: 1,
 });
 const categories_list = computed(() => {
-  if (filters.type == "Personal") {
+  if (filters.value.type == "Personal") {
     return personal_categories_list;
   } else {
     return department_categories_list;
   }
 });
-
-const files_list = ref([
-  {
-    major_head: "Company",
-    minor_head: "Work Order",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "../assets/images/login",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-  {
-    major_head: "Personal",
-    minor_head: "Alex Blaze",
-    document_date: "12-02-2024",
-    document_remarks: "Test Remarks",
-    tags: [
-      { tag_name: "RMC" },
-      { tag_name: "2024" },
-      { tag_name: "work_order" },
-    ],
-    user_id: "nitin",
-    file: "https://picsum.photos/200/300",
-  },
-]);
-
+watch(
+  () => filters.value.type,
+  (newVal, oldVal) => {
+    fetchFilesList();
+  }
+);
+const files_list = ref([]);
 const headers = [
+  { title: "ID", key: "document_id" },
   { title: "Date", key: "document_date" },
+  { title: "Uploaded By", key: "uploaded_by" },
   { title: "Type", key: "major_head" },
   { title: "Category", key: "minor_head" },
   { title: "Tags", key: "tags" },
@@ -270,13 +190,57 @@ const headers = [
   { title: "Download", key: "download", sortable: false },
 ];
 
+onMounted(() => {
+  fetchFilesList();
+});
+const fetchFilesList = () => {
+  const payload = {
+    major_head: filters.value.type,
+    minor_head: filters.value.category,
+    from_date: filters.value.from_date,
+    to_date: filters.value.to_date,
+    tags: filters.value.tags.map((tag) => ({ tag_name: tag })),
+    uploaded_by: "",
+    start: 0,
+    length: 10,
+    filterId: "",
+    search: { value: "" },
+  };
+
+  const successHandler = (res) => {
+    if (res?.data?.status) {
+      files_list.value = res.data.data;
+      // length.value = res.data.recordsTotal
+    } else {
+      snackbar.showToast({
+        message: res?.data?.data || "Failed to fetch documents.",
+        color: "error",
+      });
+    }
+  };
+
+  const failureHandler = (err) => {
+    snackbar.showToast({
+      message: err?.data?.message || "API call failed.",
+      color: "error",
+    });
+  };
+
+  apiCall("post", api.documentManagement.searchDocumentEntry, {
+    data: payload,
+    isTokenRequired: true,
+    onSuccess: successHandler,
+    onFailure: failureHandler,
+  });
+};
+
 const getFileType = (url) => {
-  //   if (!url) return 'unknown'
-  //   const ext = url.split('.').pop().toLowerCase()
-  //   if (ext === 'pdf') return 'pdf'
-  //   if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image'
-  //   return 'unknown'
-  return "image";
+  if (!url) return "unknown";
+  const ext = url.split(".").pop().toLowerCase();
+  if (ext === "pdf") return "pdf";
+  if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "image";
+  return "unknown";
+  // return "image";
 };
 const openUploadFileDialog = () => {
   snackbar.showToast({
@@ -285,8 +249,8 @@ const openUploadFileDialog = () => {
   });
 };
 
-
-const downloadFile = (file) => {
+const downloadFile = (item) => {
+  // window.open(item.file_url)
   snackbar.showToast({
     message: "File Downlaoded!",
     color: "success",

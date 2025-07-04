@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="show_dialog" max-width="600px" persistent>
     <v-card class="pa-2">
-      <v-card-title class="border-bottom text-h6 d-flex align-center justify-space-between">
+      <v-card-title
+        class="border-bottom text-h6 d-flex align-center justify-space-between"
+      >
         Upload File
         <v-btn
           icon
@@ -29,7 +31,7 @@
               />
             </v-col>
             <v-col cols="12" class="pb-0" md="6">
-              <div  class="required_field">Type</div>
+              <div class="required_field">Type</div>
               <v-select
                 v-model="form.major_head"
                 :items="major_head_options"
@@ -41,9 +43,7 @@
               />
             </v-col>
 
-            <v-col cols="12" class="py-0"
-                v-if="form.major_head"
-            >
+            <v-col cols="12" class="py-0" v-if="form.major_head">
               <div class="required_field">Category</div>
               <v-select
                 v-model="form.minor_head"
@@ -56,7 +56,7 @@
               />
             </v-col>
             <v-col cols="12" class="py-0">
-              <div  class="required_field">Tags</div>
+              <div class="required_field">Tags</div>
               <v-combobox
                 v-model="form.tags"
                 :items="available_tags"
@@ -77,11 +77,10 @@
                 rows="2"
                 variant="outlined"
                 density="compact"
-                
               />
             </v-col>
             <v-col cols="12" class="py-0">
-              <div  class="required_field">File</div>
+              <div class="required_field">File</div>
               <v-file-input
                 v-model="form.file"
                 accept=".png,.jpg,.jpeg,.pdf"
@@ -91,10 +90,9 @@
                 variant="outlined"
                 density="compact"
                 :rules="[$rules.required]"
-
                 prepend-icon
                 prepend-inner-icon="mdi-file"
-                clearable 
+                clearable
               />
             </v-col>
           </v-row>
@@ -118,6 +116,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from "vue";
 import { useSnackBarStore } from "@/stores/snackBar";
+const { apiCall, api } = useApiCall();
 
 const snackbar = useSnackBarStore();
 
@@ -157,24 +156,58 @@ const form = reactive({
 watch(
   () => form.major_head,
   (newVal, oldVal) => {
-    console.log(`major_head changed from ${oldVal} to ${newVal}`);
-    form.minor_head = ''; // Reset minor when major changes
+    form.minor_head = "";
   }
 );
 const submit = async () => {
   const { valid } = await upload_file_form.value.validate();
 
-  if (valid) {
+  if (!valid) {
     snackbar.showToast({
-      message: "Uploaded!!",
-      color: "Success",
-    });
-    show_dialog.value = false;
-  } else {
-    snackbar.showToast({
-      message: "Please fill all the requried fields",
+      message: "Please fill all the required fields",
       color: "error",
     });
+    return;
   }
+
+  const user_id = localStorage.getItem("user_id");
+
+  const payload = {
+    major_head: form.major_head,
+    minor_head: form.minor_head,
+    document_date: form.date.split("-").reverse().join("-"),
+    document_remarks: form.remarks,
+    tags: form.tags.map((tag) => ({ tag_name: tag })),
+    user_id: user_id,
+  };
+
+  const formData = new FormData();
+  formData.append("file", form.file);
+  formData.append("data", JSON.stringify(payload));
+
+  const headers = {
+    "Content-Type": "multipart/form-data",
+  };
+  const successHandler = (res) => {
+    snackbar.showToast({
+      message: "File uploaded successfully!",
+      color: "success",
+    });
+    closeDialog();
+  };
+
+  const failureHandler = (err) => {
+    snackbar.showToast({
+      message: "Upload failed. Try again.",
+      color: "error",
+    });
+  };
+
+  apiCall("post", api.documentManagement.saveDocumentEntry, {
+    data: formData,
+    headers: headers,
+    onSuccess: successHandler,
+    onFailure: failureHandler,
+  });
 };
 </script>
