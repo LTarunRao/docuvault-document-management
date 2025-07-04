@@ -99,7 +99,7 @@ const router = useRouter();
 const snackbar = useSnackBarStore();
 
 const login_stepper_id = ref(1);
-const mobile_no = ref("8889666727");
+const mobile_no = ref("");
 const otp = ref("");
 const login_btn_loading = ref(false);
 const otp_btn_loading = ref(false);
